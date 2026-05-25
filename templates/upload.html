@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SmartUploader</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/reset.css') }}"
+    >
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+</head>
+
+<body>
+
+    <main class="upload-page">
+
+        <!-- INTRO -->
+
+        <section class="upload__intro">
+
+            <h1 class="upload__title">
+                Upload Photos
+            </h1>
+
+            <p class="upload__description">
+                Upload selfies, memes, or any fun pictures here.
+            </p>
+
+        </section>
+
+        <!-- TABS -->
+
+        <nav class="upload__tabs">
+
+            <button
+                class="upload__tab upload__tab--active"
+                id="upload-tab-btn"
+                type="button"
+            >
+                Upload
+            </button>
+
+            <button
+                class="upload__tab"
+                id="images-tab-btn"
+                type="button"
+            >
+                Images
+            </button>
+
+        </nav>
+
+        <!-- FORM -->
+
+        <section class="upload__form">
+
+            <!-- DROPZONE -->
+
+            <div
+                class="upload__dropzone"
+                id="dropzone"
+            >
+
+                <div class="upload__icon">
+
+                    <img
+                        src="{{ url_for('static', filename='img/icon/feather_upload-cloud.png') }}"
+                        alt="Upload icon"
+                    >
+
+                </div>
+
+                <p class="upload__prompt">
+                    Select a file or drag and drop here
+                </p>
+
+                <p class="upload__info">
+                    Supports .jpg, .png and .gif <br>
+                    Maximum file size: 5MB
+                </p>
+
+            </div>
+
+            <!-- FILE INPUT -->
+
+            <div class="upload__button">
+
+                <input
+                    type="file"
+                    id="file-upload"
+                    name="image"
+                    accept=".jpg,.jpeg,.png,.gif"
+                    hidden
+                    multiple
+                >
+
+                <label
+                    for="file-upload"
+                    class="upload__button-btn"
+                >
+                    Browse your files
+                </label>
+
+            </div>
+
+            <!-- CURRENT UPLOAD -->
+
+            <div class="upload__container">
+
+                <div class="upload__group">
+
+                    <h2 class="upload__title-current">
+                        Current Upload
+                    </h2>
+
+                    <div class="upload__label">
+
+                        <input
+                            type="text"
+                            class="upload__input"
+                            placeholder="Uploaded image URL will appear here"
+                            readonly
+                        >
+
+                        <button
+                            class="upload__copy"
+                            type="button"
+                        >
+                            COPY
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- PREVIEW -->
+
+            <div
+                class="upload__preview"
+                id="upload-preview"
+            >
+            </div>
+
+        </section>
+
+        <!-- FILE LIST -->
+
+        <section id="file-list-wrapper"></section>
+
+    </main>
+
+    <script
+        src="{{ url_for('static', filename='js/upload.js') }}"
+    ></script>
+
+</body>
+
+</html>

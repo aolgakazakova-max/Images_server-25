@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SmartUploader - Images</title>
+
+    <!-- RESET CSS -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/reset.css') }}"
+    >
+
+    <!-- GOOGLE FONTS -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- MAIN CSS -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+<body>
+
+    <main class="images-page">
+
+        <!-- INTRO -->
+
+        <section class="upload__intro">
+
+            <h1 class="upload__title">
+                Uploaded Images
+            </h1>
+
+            <p class="upload__description">
+                View and manage all uploaded images.
+            </p>
+
+        </section>
+
+        <!-- TABS -->
+
+        <nav class="upload__tabs">
+
+            <button
+                class="upload__tab"
+                id="upload-tab-btn"
+                type="button"
+            >
+                Upload
+            </button>
+
+            <button
+                class="upload__tab upload__tab--active"
+                id="images-tab-btn"
+                type="button"
+            >
+                Images
+            </button>
+
+        </nav>
+
+        <!-- IMAGE LIST -->
+
+        <section
+            id="file-list-wrapper"
+            class="images__container"
+        >
+
+            {% if images %}
+
+                <div class="file-list-container">
+
+                    <!-- HEADER -->
+
+                    <div class="file-list-header">
+
+                        <div class="file-col file-col-preview">
+                            Preview
+                        </div>
+
+                        <div class="file-col file-col-name">
+                            Name
+                        </div>
+
+                        <div class="file-col file-col-url">
+                            URL
+                        </div>
+
+                    </div>
+
+                    <!-- IMAGES -->
+
+                    <div id="file-list">
+
+                        {% for image in images %}
+
+                            <div class="file-list-item">
+
+                                <!-- PREVIEW -->
+
+                                <div class="file-col file-col-preview">
+
+                                    <img
+                                        src="{{ image.url }}"
+                                        alt="{{ image.name }}"
+                                        class="file-preview-image"
+                                    >
+
+                                </div>
+
+                                <!-- NAME -->
+
+                                <div class="file-col file-col-name">
+
+                                    <span class="file-name">
+                                        {{ image.name }}
+                                    </span>
+
+                                </div>
+
+                                <!-- URL -->
+
+                                <div class="file-col file-col-url">
+    <input
+        type="text"
+        class="file-url-input"
+        value="{{ image.full_url }}"
+        readonly
+    >
+
+    <button
+        class="copy-btn"
+        type="button"
+        data-url="{{ image.full_url }}"
+    >
+        COPY
+    </button>
+
+    <button
+        class="delete-btn"
+        type="button"
+        data-filename="{{ image.name }}"
+    >
+        DELETE
+    </button>
+</div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-images">
+
+                    <p class="empty-images__text">
+                        No uploaded images yet.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+    <!-- PASS IMAGES TO JS -->
+
+    <script>
+        const uploadedImages = {{ images|tojson }};
+    </script>
+
+    <!-- IMAGES JS -->
+
+    <script
+        src="{{ url_for('static', filename='js/images.js') }}"
+    ></script>
+
+</body>
+
+</html>
