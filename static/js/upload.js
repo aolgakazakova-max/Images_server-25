@@ -7,12 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const imagesButton = document.getElementById('images-tab-btn');
     const uploadButton = document.getElementById('upload-tab-btn');
 
-    const STORAGE_KEY = 'uploadedImages';
-
     // NAVIGATION
+
     if (imagesButton) {
         imagesButton.addEventListener('click', () => {
-            window.location.href = '/images/';
+            window.location.href = '/images-list';
         });
     }
 
@@ -28,121 +27,178 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // GET STORAGE
+    // VALIDATION
 
-
-    // FILE VALIDATION
     const isValidFile = (file) => {
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+        const allowedTypes = [
+            'image/jpeg',
+            'image/png',
+            'image/gif'
+        ];
+
         const maxSize = 5 * 1024 * 1024;
 
-        return allowedTypes.includes(file.type) && file.size <= maxSize;
+        return (
+            allowedTypes.includes(file.type) &&
+            file.size <= maxSize
+        );
     };
 
-    // HANDLE FILES
+    // UPLOAD
+
     const handleFiles = async (files) => {
 
-    if (!files || files.length === 0) return;
-
-    for (const file of files) {
-
-        if (!isValidFile(file)) {
-
-            alert('Only JPG, PNG, GIF up to 5MB');
-            continue;
-
+        if (!files || files.length === 0) {
+            return;
         }
 
-        const formData = new FormData();
+        for (const file of files) {
 
-        formData.append('image', file);
+            if (!isValidFile(file)) {
 
-        try {
+                alert(
+                    'Only JPG, PNG, GIF up to 5MB'
+                );
 
-            const response = await fetch('/upload', {
-                method: 'POST',
-                body: formData
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-
-                alert(data.error || 'Upload failed');
                 continue;
-
             }
 
-            console.log(data);
+            const formData = new FormData();
 
-            if (currentUploadInput) {
-                currentUploadInput.value = data.full_url;
-            }
-
-            alert('Image uploaded successfully!');
-
-        } catch (error) {
-
-            console.error(error);
-
-            alert('Server error');
-
-        }
-
-    }
-
-};
-    // COPY BUTTON
-    if (copyButton && currentUploadInput) {
-
-        copyButton.addEventListener('click', async () => {
-
-            const text = currentUploadInput.value;
-
-            if (!text) return;
+            formData.append(
+                'image',
+                file
+            );
 
             try {
 
-                await navigator.clipboard.writeText(text);
+                const response = await fetch(
+                    '/upload',
+                    {
+                        method: 'POST',
+                        body: formData
+                    }
+                );
 
-                copyButton.textContent = 'COPIED';
+                const data =
+                    await response.json();
 
-                setTimeout(() => {
-                    copyButton.textContent = 'COPY';
-                }, 1500);
+                if (!response.ok) {
 
-            } catch (err) {
-                console.error('Copy failed:', err);
+                    alert(
+                        data.error ||
+                        'Upload failed'
+                    );
+
+                    continue;
+                }
+
+                if (currentUploadInput) {
+                    currentUploadInput.value =
+                        data.full_url;
+                }
+
+                alert(
+                    'Image uploaded successfully!'
+                );
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert('Server error');
             }
+        }
+    };
 
-        });
+    // COPY
 
+    if (copyButton && currentUploadInput) {
+
+        copyButton.addEventListener(
+            'click',
+            async () => {
+
+                const text =
+                    currentUploadInput.value;
+
+                if (!text) {
+                    return;
+                }
+
+                try {
+
+                    await navigator.clipboard
+                        .writeText(text);
+
+                    copyButton.textContent =
+                        'COPIED';
+
+                    setTimeout(() => {
+
+                        copyButton.textContent =
+                            'COPY';
+
+                    }, 1500);
+
+                } catch (err) {
+
+                    console.error(
+                        'Copy failed:',
+                        err
+                    );
+                }
+            }
+        );
     }
 
     // FILE INPUT
+
     if (fileUpload) {
 
-        fileUpload.addEventListener('change', (event) => {
-            handleFiles(event.target.files);
-            fileUpload.value = '';
-        });
+        fileUpload.addEventListener(
+            'change',
+            (event) => {
 
+                handleFiles(
+                    event.target.files
+                );
+
+                fileUpload.value = '';
+            }
+        );
     }
 
-    // DRAG & DROP
+    // DRAG AND DROP
+
     if (dropzone) {
 
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropzone.addEventListener(eventName, (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-            });
+        [
+            'dragenter',
+            'dragover',
+            'dragleave',
+            'drop'
+        ].forEach(eventName => {
+
+            dropzone.addEventListener(
+                eventName,
+                (e) => {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            );
         });
 
-        dropzone.addEventListener('drop', (event) => {
-            handleFiles(event.dataTransfer.files);
-        });
+        dropzone.addEventListener(
+            'drop',
+            (event) => {
 
+                handleFiles(
+                    event.dataTransfer.files
+                );
+            }
+        );
     }
-
 });

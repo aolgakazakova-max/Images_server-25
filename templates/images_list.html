@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список изображений</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        h1, p, td, th, a {
+            color: #000 !important;
+        }
+
+        img.preview {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 6px;
+            display: block;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+        }
+
+        td {
+            vertical-align: top;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<h1>Список изображений</h1>
+
+{% if images %}
+
+<table border="1" cellpadding="10">
+
+    <thead>
+        <tr>
+            <th>Превью</th>
+            <th>Оригинальное имя</th>
+            <th>Размер (КБ)</th>
+            <th>Дата загрузки</th>
+            <th>Тип файла</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for img in images %}
+
+        <tr>
+
+            <td>
+                <a href="/images/{{ img.filename }}" target="_blank">
+
+                    <img
+                        src="/images/{{ img.filename }}"
+                        alt="{{ img.filename }}"
+                        class="preview"
+                    >
+
+                    {{ img.filename }}
+
+                </a>
+            </td>
+
+            <td>
+                {{ img.original_name }}
+            </td>
+
+            <td>
+                {{ ((img.size or 0) / 1024)|round(2) }}
+            </td>
+
+            <td>
+                {{ img.upload_time }}
+            </td>
+
+            <td>
+                {{ img.file_type }}
+            </td>
+
+            <td>
+                <form action="{{ url_for('delete_image', image_id=img.id) }}"
+                      method="post">
+
+                    <button type="submit">
+                        Удалить
+                    </button>
+
+                </form>
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% else %}
+
+<p>Нет загруженных изображений</p>
+
+{% endif %}
+
+<br>
+
+<div>
+
+{% if page > 1 %}
+    <a href="{{ url_for('images_list', page=page-1) }}">
+        ← Предыдущая
+    </a>
+{% endif %}
+
+&nbsp;
+
+Страница {{ page }} из {{ total_pages }}
+
+&nbsp;
+
+{% if page < total_pages %}
+    <a href="{{ url_for('images_list', page=page+1) }}">
+        Следующая →
+    </a>
+{% endif %}
+
+</div>
+
+</body>
+</html>

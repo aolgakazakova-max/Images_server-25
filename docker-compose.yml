@@ -5,13 +5,20 @@ services:
     build: .
     container_name: image_server_app
     restart: unless-stopped
-
+    depends_on:
+      - db
     ports:
       - "3000:3000"
 
     environment:
       IMAGES_DIR: /images
       LOGS_DIR: /logs
+
+      DB_HOST: db
+      DB_NAME: images_db
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_PORT: 5432
 
     volumes:
       - images:/images
@@ -25,10 +32,18 @@ services:
     environment:
       POSTGRES_DB: images_db
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: password
+
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
 
   nginx:
     image: nginx:1.27-alpine
