@@ -3,6 +3,13 @@ version: '3.9'
 services:
   app:
     build: .
+    env_file:
+      - .env
+    environment:
+      IMAGES_DIR: /images
+      LOGS_DIR: /logs
+
+
     container_name: image_server_app
     restart: unless-stopped
     depends_on:
@@ -10,13 +17,6 @@ services:
         condition: service_healthy
     ports:
       - "3000:3000"
-
-    environment:
-      env_file:
-        - .env
-      IMAGES_DIR: /images
-      LOGS_DIR: /logs
-
 
 
     volumes:
