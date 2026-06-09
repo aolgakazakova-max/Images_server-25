@@ -3,9 +3,9 @@ import os
 
 def get_connection():
     return psycopg.connect(
-        host=os.getenv('DB_HOST', 'db'),
-        user=os.getenv('DB_USER', 'postgres'),
-        dbname=os.getenv('DB_NAME', 'images_db'),
-        password=os.getenv('DB_PASSWORD', 'password'),
-        port=int(os.getenv('DB_PORT', '5432'))
+        host=os.getenv('DB_HOST'),
+        user=os.getenv('DB_USER'),
+        dbname=os.getenv('DB_NAME'),
+        password=os.getenv('DB_PASSWORD'),
+        port=int(os.getenv('DB_PORT')
     )

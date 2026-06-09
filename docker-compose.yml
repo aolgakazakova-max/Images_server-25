@@ -6,19 +6,18 @@ services:
     container_name: image_server_app
     restart: unless-stopped
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - "3000:3000"
 
     environment:
+      env_file:
+        - .env
       IMAGES_DIR: /images
       LOGS_DIR: /logs
 
-      DB_HOST: db
-      DB_NAME: images_db
-      DB_USER: postgres
-      DB_PASSWORD: password
-      DB_PORT: 5432
+
 
     volumes:
       - images:/images
@@ -26,13 +25,10 @@ services:
 
   db:
     image: postgres:17-alpine
+    env_file:
+      - .env
     container_name: image_server_db
     restart: unless-stopped
-
-    environment:
-      POSTGRES_DB: images_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
 
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
@@ -42,6 +38,8 @@ services:
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
     ports:
       - "5435:5432"
 

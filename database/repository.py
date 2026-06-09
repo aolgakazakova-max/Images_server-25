@@ -46,11 +46,9 @@ def save_metadata(
 
 
 def get_images(per_page: int, offset: int) -> List[Tuple[Any, ...]]:
-    """Получение списка изображений с пагинацией."""
+
     try:
-        print("CONNECTING DB")   # 👈 сюда
         with get_connection() as conn:
-            print("CONNECTED")   # 👈 и сюда
 
             with conn.cursor() as cursor:
                 sql = """
@@ -79,15 +77,12 @@ def get_images(per_page: int, offset: int) -> List[Tuple[Any, ...]]:
 
 
 def get_count_images() -> int:
-    """Получение общего количества изображений."""
     try:
-        print("COUNT DB CONNECT")
         with get_connection() as conn:
             with conn.cursor() as cursor:
                 cursor.execute(
                     "SELECT COUNT(*) FROM images"
                 )
-
                 total = cursor.fetchone()[0]
 
         return total
