@@ -1,210 +1,140 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <title>SmartUploader - Изображения</title>
 
-    <title>SmartUploader - Images</title>
-
-    <!-- RESET CSS -->
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/reset.css') }}"
-    >
-
-    <!-- GOOGLE FONTS -->
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin
-    >
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
-        rel="stylesheet"
-    >
-
-    <!-- MAIN CSS -->
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/style.css') }}"
-    >
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 
 <body>
 
-    <main class="images-page">
+<main class="images-page">
 
-        <!-- INTRO -->
 
-        <section class="upload__intro">
+    <section class="upload__intro">
 
-            <h1 class="upload__title">
-                Uploaded Images
-            </h1>
+        <h1 id="images-title">Загруженные изображения</h1>
 
-            <p class="upload__description">
-                View and manage all uploaded images.
-            </p>
+        <p id="images-description">
+            Просмотр и управление всеми загруженными изображениями
+        </p>
 
-        </section>
+    </section>
 
-        <!-- TABS -->
+    <!-- TABS -->
+    <nav class="upload__tabs">
 
-        <nav class="upload__tabs">
+        <button id="upload-tab-btn" type="button" class="upload__tab">
+            Загрузка
+        </button>
 
-            <button
-                class="upload__tab"
-                id="upload-tab-btn"
-                type="button"
-            >
-                Upload
-            </button>
+        <button id="images-tab-btn" type="button" class="upload__tab upload__tab--active">
+            Изображения
+        </button>
 
-            <button
-                class="upload__tab upload__tab--active"
-                id="images-tab-btn"
-                type="button"
-            >
-                Images
-            </button>
+    </nav>
 
-        </nav>
 
-        <!-- IMAGE LIST -->
+    <section class="images__container">
 
-        <section
-            id="file-list-wrapper"
-            class="images__container"
-        >
+        {% if images %}
 
-            {% if images %}
+            <div class="file-list-container">
 
-                <div class="file-list-container">
+                <div class="file-list-header">
 
-                    <!-- HEADER -->
+                    <div>Превью</div>
+                    <div>Имя</div>
+                    <div>Действия</div>
 
-                    <div class="file-list-header">
+                </div>
 
-                        <div class="file-col file-col-preview">
-                            Preview
-                        </div>
+                <div id="file-list">
 
-                        <div class="file-col file-col-name">
-                            Name
-                        </div>
+                    {% for image in images %}
 
-                        <div class="file-col file-col-url">
-                            URL
-                        </div>
+                        <div class="file-list-item">
 
-                    </div>
+                            <!-- PREVIEW -->
+                            <div>
+                                <img
+                                    src="{{ image.url }}"
+                                    alt="{{ image.name }}"
+                                    class="file-preview-image"
+                                >
+                            </div>
 
-                    <!-- IMAGES -->
 
-                    <div id="file-list">
+                            <div>
+                                {{ image.name }}
+                            </div>
 
-                        {% for image in images %}
 
-                            <div class="file-list-item">
+                            <div>
 
-                                <!-- PREVIEW -->
+                                <input
+                                    type="text"
+                                    value="{{ image.full_url }}"
+                                    readonly
+                                >
 
-                                <div class="file-col file-col-preview">
 
-                                    <img
-                                        src="{{ image.url }}"
-                                        alt="{{ image.name }}"
-                                        class="file-preview-image"
+                                <button
+                                    type="button"
+                                    class="copy-btn"
+                                    data-url="{{ image.full_url }}"
+                                >
+                                    КОПИРОВАТЬ
+                                </button>
+
+
+                                <form
+                                    action="{{ url_for('delete_image_filesystem', image_id=image.id) }}"
+                                    method="post"
+                                    style="display:inline;"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="delete-btn"
+                                        onclick="return confirm('Удалить изображение?')"
                                     >
+                                        УДАЛИТЬ
+                                    </button>
 
-                                </div>
-
-                                <!-- NAME -->
-
-                                <div class="file-col file-col-name">
-
-                                    <span class="file-name">
-                                        {{ image.name }}
-                                    </span>
-
-                                </div>
-
-                                <!-- URL -->
-
-                                <div class="file-col file-col-url">
-    <input
-        type="text"
-        class="file-url-input"
-        value="{{ image.full_url }}"
-        readonly
-    >
-
-    <button
-        class="copy-btn"
-        type="button"
-        data-url="{{ image.full_url }}"
-    >
-        COPY
-    </button>
-
-    <button
-        class="delete-btn"
-        type="button"
-        data-filename="{{ image.name }}"
-    >
-        DELETE
-    </button>
-</div>
+                                </form>
 
                             </div>
 
-                        {% endfor %}
+                        </div>
 
-                    </div>
-
-                </div>
-
-            {% else %}
-
-                <div class="empty-images">
-
-                    <p class="empty-images__text">
-                        No uploaded images yet.
-                    </p>
+                    {% endfor %}
 
                 </div>
 
-            {% endif %}
+            </div>
 
-        </section>
+        {% else %}
 
-    </main>
+            <p style="text-align:center;">
+                Пока нет загруженных изображений
+            </p>
 
-    <!-- PASS IMAGES TO JS -->
+        {% endif %}
 
-    <script>
-        const uploadedImages = {{ images|tojson }};
-    </script>
+    </section>
 
-    <!-- IMAGES JS -->
+</main>
 
-    <script
-        src="{{ url_for('static', filename='js/images.js') }}"
-    ></script>
+<!-- JS -->
+<script src="{{ url_for('static', filename='js/images.js') }}"></script>
 
 </body>
-
 </html>

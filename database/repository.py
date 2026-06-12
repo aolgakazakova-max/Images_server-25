@@ -10,7 +10,7 @@ def save_metadata(
     size: int,
     file_type: str
 ) -> None:
-    """Сохранение метаданных изображения в БД."""
+
     try:
         with get_connection() as conn:
             with conn.cursor() as cursor:
@@ -29,7 +29,7 @@ def save_metadata(
                     (filename, original_name, size, file_type)
                 )
 
-            # фиксируем изменения в БД
+
             conn.commit()
 
         logging.info(

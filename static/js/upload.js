@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const imagesButton = document.getElementById('images-tab-btn');
     const uploadButton = document.getElementById('upload-tab-btn');
 
-    // NAVIGATION
+
 
     if (imagesButton) {
         imagesButton.addEventListener('click', () => {
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // VALIDATION
+
 
     const isValidFile = (file) => {
 
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     };
 
-    // UPLOAD
+
 
     const handleFiles = async (files) => {
 
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // COPY
+
 
     if (copyButton && currentUploadInput) {
 
@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     }
 
-    // FILE INPUT
+
 
     if (fileUpload) {
 
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     }
 
-    // DRAG AND DROP
+
 
     if (dropzone) {
 
